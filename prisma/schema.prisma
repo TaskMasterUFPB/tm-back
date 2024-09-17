@@ -14,14 +14,16 @@ datasource db {
 }
 
 model Projeto {
-  id         String   @id @default(uuid())
-  nome       String   @db.VarChar(150)
-  descricao  String
-  id_lider   String
-  url        String
-  dataInicio DateTime @default(now())
-  deletado   Boolean  @default(false)
-  Tarefas    Tarefa[]
+  id               String   @id @default(uuid())
+  nome             String   @db.VarChar(150)
+  descricao        String
+  id_criador       String
+  id_lider         String
+  participantes_id String[]
+  url              String
+  dataInicio       DateTime @default(now())
+  deletado         Boolean  @default(false)
+  Tarefas          Tarefa[]
 }
 
 model Tarefa {

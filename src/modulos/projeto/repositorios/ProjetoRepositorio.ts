@@ -20,8 +20,12 @@ export class ProjetoRepositorio implements IProjetoRepositorio {
         })
     }
 
-    async buscarTodos() {
-        return await prisma.projeto.findMany()
+    async buscarTodos(id_criador: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                id_criador
+            }
+        })
     }
 
     async atualizar(id: string, data: Prisma.ProjetoUpdateInput) {
