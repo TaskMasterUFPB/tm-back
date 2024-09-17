@@ -1,10 +1,9 @@
 import { app } from './app'
-
-const port = Number(process.env.PORT) || 3000
+import { env } from './env'
 
 app.listen({
-    port: 3000,
+    port: env.PORT,
     host: '0.0.0.0'
 }).then(() => {
-    console.log(`Server listening on port ${port}`)
+    console.log(`Server listening on port ${env.PORT}`)
 })
