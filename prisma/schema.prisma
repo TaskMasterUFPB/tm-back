@@ -43,7 +43,7 @@ model Tarefa {
 }
 
 model Usuario {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   nome        String   @db.VarChar(150)
   email       String   @unique
   senha       String

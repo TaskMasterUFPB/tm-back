@@ -29,7 +29,7 @@ export class UsuarioService {
   }
 
   // Atualizar um usuário existente
-  async atualizar(id: number, data: AtualizarUsuario): Promise<Usuario | null> {
+  async atualizar(id: string, data: AtualizarUsuario): Promise<Usuario | null> {
     const usuarioExistente = await this.usuarioRepo.buscarPorId(id);
   
     if (!usuarioExistente) {
@@ -46,7 +46,7 @@ export class UsuarioService {
   }  
 
   // Buscar um usuário por ID
-  async getId(id: number) {
+  async getId(id: string) {
     const usuario = await this.usuarioRepo.buscarPorId(id);
 
     if (!usuario) {
@@ -68,7 +68,7 @@ export class UsuarioService {
   }
 
   // Deletar (logicamente) um usuário
-  async deletar(id: number) {
+  async deletar(id: string) {
     const usuarioExistente = await this.usuarioRepo.buscarPorId(id);
 
     if (!usuarioExistente) {
@@ -81,21 +81,21 @@ export class UsuarioService {
 
 
 
-  async getNome(id: number): Promise<string | null> {
+  async getNome(id: string): Promise<string | null> {
     const usuario = await this.usuarioRepo.buscarPorId(id);
     return usuario ? usuario.nome : null;
   }
 
-  async setNome(id: number, nome: string): Promise<Usuario | null> {
+  async setNome(id: string, nome: string): Promise<Usuario | null> {
     return await this.usuarioRepo.atualizar(id, { nome });
   }
 
-  async getEmail(id: number): Promise<string | null> {
+  async getEmail(id: string): Promise<string | null> {
     const usuario = await this.usuarioRepo.buscarPorId(id);
     return usuario ? usuario.email : null;
   }
 
-  async setEmail(id: number, email: string): Promise<Usuario | null> {
+  async setEmail(id: string, email: string): Promise<Usuario | null> {
     const usuarioExistente = await this.usuarioRepo.buscarPorEmail(email);
 
     if (usuarioExistente) {
@@ -105,7 +105,7 @@ export class UsuarioService {
     return await this.usuarioRepo.atualizar(id, { email });
   }
 
-  async verificarSenha(id: number, senha: string): Promise<boolean> {
+  async verificarSenha(id: string, senha: string): Promise<boolean> {
     const usuario = await this.usuarioRepo.buscarPorId(id);
   
     if (!usuario) {
@@ -116,19 +116,19 @@ export class UsuarioService {
     return isMatch;
   }  
 
-  async setSenha(id: number, senha: string): Promise<Usuario | null> {
+  async setSenha(id: string, senha: string): Promise<Usuario | null> {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(senha, saltRounds);
   
     return await this.usuarioRepo.atualizar(id, { senha: hashedPassword });
   }
 
-  async getCargo(id: number): Promise<'ADM' | 'FUNCIONARIO' | null> {
+  async getCargo(id: string): Promise<'ADM' | 'FUNCIONARIO' | null> {
     const usuario = await this.usuarioRepo.buscarPorId(id);
     return usuario ? usuario.cargo : null;
   }
 
-  async setCargo(id: number, cargo: 'ADM' | 'FUNCIONARIO'): Promise<Usuario | null> {
+  async setCargo(id: string, cargo: 'ADM' | 'FUNCIONARIO'): Promise<Usuario | null> {
     return await this.usuarioRepo.atualizar(id, { cargo });
   }
 }

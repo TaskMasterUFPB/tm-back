@@ -32,7 +32,7 @@ export class UsuarioController {
   // Atualizar um usuário existente
   async atualizar(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const data: AtualizarUsuario = req.body as AtualizarUsuario;
       const usuarioAtualizado = await this.usuarioService.atualizar(id, data);
       return res.status(200).send(usuarioAtualizado);
@@ -44,7 +44,7 @@ export class UsuarioController {
   // Buscar um usuário por ID
   async buscarPorId(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const usuario = await this.usuarioService.getId(id);
       return res.status(200).send(usuario);
     } catch (error: any) {
@@ -66,7 +66,7 @@ export class UsuarioController {
   // Deletar (logicamente) um usuário
   async deletar(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const usuarioDeletado = await this.usuarioService.deletar(id);
       return res.status(200).send(usuarioDeletado);
     } catch (error: any) {
@@ -77,7 +77,7 @@ export class UsuarioController {
   // Métodos de negócio para trabalhar com dados do usuário diretamente
   async getNome(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const nome = await this.usuarioService.getNome(id);
       return res.status(200).send({ nome });
     } catch (error: any) {
@@ -87,7 +87,7 @@ export class UsuarioController {
 
   async setNome(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const { nome } = req.body as { nome: string };
       const usuarioAtualizado = await this.usuarioService.setNome(id, nome);
       return res.status(200).send(usuarioAtualizado);
@@ -98,7 +98,7 @@ export class UsuarioController {
 
   async getEmail(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const email = await this.usuarioService.getEmail(id);
       return res.status(200).send({ email });
     } catch (error: any) {
@@ -108,7 +108,7 @@ export class UsuarioController {
 
   async setEmail(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const { email } = req.body as { email: string };
       const usuarioAtualizado = await this.usuarioService.setEmail(id, email);
       return res.status(200).send(usuarioAtualizado);
@@ -119,7 +119,7 @@ export class UsuarioController {
 
   async setSenha(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const { senha } = req.body as { senha: string };
       const usuarioAtualizado = await this.usuarioService.setSenha(id, senha);
       return res.status(200).send(usuarioAtualizado);
@@ -130,7 +130,7 @@ export class UsuarioController {
 
   async getCargo(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const cargo = await this.usuarioService.getCargo(id);
       return res.status(200).send({ cargo });
     } catch (error: any) {
@@ -140,7 +140,7 @@ export class UsuarioController {
 
   async setCargo(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const { cargo } = req.body as { cargo: string };
   
       // Verificar se o cargo é válido

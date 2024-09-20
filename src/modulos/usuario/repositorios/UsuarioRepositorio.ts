@@ -15,7 +15,7 @@ export class UsuarioRepositorio implements IUsuarioRepositorio {
     return novoUsuario;
   }
 
-  async atualizar(id: number, data: Partial<Usuario>): Promise<Usuario | null> {
+  async atualizar(id: string, data: Partial<Usuario>): Promise<Usuario | null> {
     const usuarioAtualizado = await prisma.usuario.update({
       where: { id },
       data,
@@ -24,7 +24,7 @@ export class UsuarioRepositorio implements IUsuarioRepositorio {
     return usuarioAtualizado;
   }
 
-  async buscarPorId(id: number): Promise<Usuario | null> {
+  async buscarPorId(id: string): Promise<Usuario | null> {
     const usuario = await prisma.usuario.findFirst({
       where: {
         id,
@@ -44,7 +44,7 @@ export class UsuarioRepositorio implements IUsuarioRepositorio {
     return usuario;
   }
 
-  async deletar(id: number): Promise<Usuario | null> {
+  async deletar(id: string): Promise<Usuario | null> {
     const usuarioDeletado = await prisma.usuario.update({
       where: { id },
       data: {
