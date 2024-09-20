@@ -41,3 +41,17 @@ model Tarefa {
   Projeto      Projeto? @relation(fields: [projetoId], references: [id])
   projetoId    String?
 }
+
+model Usuario {
+  id          Int      @id @default(autoincrement())
+  nome        String   @db.VarChar(150)
+  email       String   @unique
+  senha       String
+  cargo       Cargo
+  deletado    Boolean  @default(false)
+}
+
+enum Cargo {
+  ADM
+  FUNCIONARIO
+}
