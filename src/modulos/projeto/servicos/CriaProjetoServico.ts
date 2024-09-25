@@ -7,7 +7,20 @@ export class ProjetoServico {
     }
 
     async criar(data: CriarProjeto) {
-        return await this.projetoRepositorio.criar(data);
+        const { nome, descricao, id_criador, id_lider, url, dataInicio } = data;
+        return await this.projetoRepositorio.criar({
+            nome,
+            descricao,
+            url,
+            dataInicio: dataInicio ? new Date(dataInicio) : undefined, // optional start date
+            deletado: false,
+            Criado: {
+                connect: { id: id_criador },
+            },
+            Lider: {
+                connect: { id: id_lider },
+            }
+        });
     }
 
     async deletar(id: string) {

@@ -14,41 +14,53 @@ datasource db {
 }
 
 model Projeto {
-  id               String   @id @default(uuid())
-  nome             String   @db.VarChar(150)
-  descricao        String
-  id_criador       String
-  id_lider         String
-  participantes_id String[]
-  url              String
-  dataInicio       DateTime @default(now())
-  deletado         Boolean  @default(false)
-  Tarefas          Tarefa[]
+  id            String    @id @default(uuid())
+  nome          String    @db.VarChar(150)
+  descricao     String
+  id_criador    String
+  id_lider      String
+  url           String
+  dataInicio    DateTime  @default(now())
+  deletado      Boolean   @default(false)
+  Tarefas       Tarefa[]
+  Participantes Usuario[]
+  Criado        Usuario   @relation(name: "Criador", fields: [id_criador], references: [id])
+  Lider         Usuario   @relation(name: "Lider", fields: [id_lider], references: [id])
 }
 
 model Tarefa {
-  id           String   @id @default(uuid())
-  titulo       String   @db.VarChar(150)
-  descricao    String
-  caso_teste   String
-  prioridade   String
-  complexidade String
-  status       String
-  dataCriacao  DateTime @default(now())
-  dataInicio   DateTime
-  dataFim      DateTime
-  deletado     Boolean  @default(false)
-  Projeto      Projeto? @relation(fields: [projetoId], references: [id])
-  projetoId    String?
+  id                     String   @id @default(uuid())
+  titulo                 String   @db.VarChar(150)
+  descricao              String
+  caso_teste             String
+  prioridade             String
+  complexidade           String
+  status                 String
+  usuario_autor_id       String
+  usuario_responsavel_id String
+  projeto_id             String?
+  dataCriacao            DateTime @default(now())
+  dataInicio             DateTime
+  dataFim                DateTime
+  deletado               Boolean  @default(false)
+  Autor                  Usuario  @relation(name: "AutorTarefa", fields: [usuario_autor_id], references: [id])
+  Responsavel            Usuario  @relation(name: "ResponsavelTarefa", fields: [usuario_responsavel_id], references: [id])
+  Projeto                Projeto? @relation(fields: [projeto_id], references: [id])
 }
 
 model Usuario {
-  id          String   @id @default(uuid())
-  nome        String   @db.VarChar(150)
-  email       String   @unique
-  senha       String
-  cargo       Cargo
-  deletado    Boolean  @default(false)
+  id                 String    @id @default(uuid())
+  nome               String    @db.VarChar(150)
+  email              String    @unique
+  senha              String
+  cargo              Cargo
+  deletado           Boolean   @default(false)
+  tarefasCriadas     Tarefa[]  @relation(name: "AutorTarefa")
+  tarefasResponsavel Tarefa[]  @relation(name: "ResponsavelTarefa")
+  projetoLider       Projeto[] @relation(name: "Criador")
+  projetoResponsavel Projeto[] @relation(name: "Lider")
+  Projeto            Projeto?  @relation(fields: [projetoId], references: [id])
+  projetoId          String?
 }
 
 enum Cargo {
