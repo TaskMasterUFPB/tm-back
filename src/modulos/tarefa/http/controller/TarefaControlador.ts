@@ -1,8 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { TarefaServico } from "../../servicos/TarefaServico";
 import { z } from "zod";
 import { CriarTarefa } from "../../dtos/CriarTarefa";
-import { fabricaProjeto } from "../../../projeto/servicos/fabrica/fabrica-projeto";
 import { fabricaTarefa } from "../../servicos/fabrica/fabrica-tarefa";
 
 export class TarefaControlador {
