@@ -79,32 +79,6 @@ export class UsuarioService {
     return usuarioDeletado;
   }
 
-
-
-  async getNome(id: string): Promise<string | null> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-    return usuario ? usuario.nome : null;
-  }
-
-  async setNome(id: string, nome: string): Promise<Usuario | null> {
-    return await this.usuarioRepo.atualizar(id, { nome });
-  }
-
-  async getEmail(id: string): Promise<string | null> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-    return usuario ? usuario.email : null;
-  }
-
-  async setEmail(id: string, email: string): Promise<Usuario | null> {
-    const usuarioExistente = await this.usuarioRepo.buscarPorEmail(email);
-
-    if (usuarioExistente) {
-      throw new Error('Email já cadastrado');
-    }
-
-    return await this.usuarioRepo.atualizar(id, { email });
-  }
-
   async verificarSenha(id: string, senha: string): Promise<boolean> {
     const usuario = await this.usuarioRepo.buscarPorId(id);
   
@@ -116,19 +90,4 @@ export class UsuarioService {
     return isMatch;
   }  
 
-  async setSenha(id: string, senha: string): Promise<Usuario | null> {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(senha, saltRounds);
-  
-    return await this.usuarioRepo.atualizar(id, { senha: hashedPassword });
-  }
-
-  async getCargo(id: string): Promise<'ADM' | 'FUNCIONARIO' | null> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-    return usuario ? usuario.cargo : null;
-  }
-
-  async setCargo(id: string, cargo: 'ADM' | 'FUNCIONARIO'): Promise<Usuario | null> {
-    return await this.usuarioRepo.atualizar(id, { cargo });
-  }
 }
