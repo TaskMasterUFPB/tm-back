@@ -2,6 +2,7 @@ import { UsuarioRepositorio } from '../repositorios/UsuarioRepositorio';
 import { CriarUsuario, AtualizarUsuario } from '../dtos/IUsuario';
 import { Usuario } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'; // Biblioteca para gerar o JWT
 
 export class UsuarioService {
   private usuarioRepo: UsuarioRepositorio;
@@ -24,6 +25,7 @@ export class UsuarioService {
     const novoUsuario = await this.usuarioRepo.criar({
       ...data,
       senha: hashedPassword,
+      projetoId: data.projetoId || null,
     });
     return novoUsuario;
   }
@@ -43,7 +45,7 @@ export class UsuarioService {
   
     const usuarioAtualizado = await this.usuarioRepo.atualizar(id, data);
     return usuarioAtualizado;
-  }  
+  }
 
   // Buscar um usuário por ID
   async getId(id: string) {
@@ -79,56 +81,38 @@ export class UsuarioService {
     return usuarioDeletado;
   }
 
+  // Método para autenticar o usuário (login)
+  async autenticar(email: string, senha: string): Promise<Usuario | null> {
+    const usuario = await this.usuarioRepo.buscarPorEmail(email);
 
-
-  async getNome(id: string): Promise<string | null> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-    return usuario ? usuario.nome : null;
-  }
-
-  async setNome(id: string, nome: string): Promise<Usuario | null> {
-    return await this.usuarioRepo.atualizar(id, { nome });
-  }
-
-  async getEmail(id: string): Promise<string | null> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-    return usuario ? usuario.email : null;
-  }
-
-  async setEmail(id: string, email: string): Promise<Usuario | null> {
-    const usuarioExistente = await this.usuarioRepo.buscarPorEmail(email);
-
-    if (usuarioExistente) {
-      throw new Error('Email já cadastrado');
-    }
-
-    return await this.usuarioRepo.atualizar(id, { email });
-  }
-
-  async verificarSenha(id: string, senha: string): Promise<boolean> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-  
     if (!usuario) {
       throw new Error('Usuário não encontrado');
     }
-  
-    const isMatch = await bcrypt.compare(senha, usuario.senha);
-    return isMatch;
-  }  
 
-  async setSenha(id: string, senha: string): Promise<Usuario | null> {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(senha, saltRounds);
-  
-    return await this.usuarioRepo.atualizar(id, { senha: hashedPassword });
+    // Verifica se a senha está correta
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaValida) {
+      return null;
+    }
+
+    return usuario;
   }
 
-  async getCargo(id: string): Promise<'ADM' | 'FUNCIONARIO' | null> {
-    const usuario = await this.usuarioRepo.buscarPorId(id);
-    return usuario ? usuario.cargo : null;
-  }
-
-  async setCargo(id: string, cargo: 'ADM' | 'FUNCIONARIO'): Promise<Usuario | null> {
-    return await this.usuarioRepo.atualizar(id, { cargo });
+  // Método para gerar o token (JWT)
+  async gerarToken(usuario: Usuario): Promise<string> {
+    const secretKey = process.env.JWT_SECRET || 'defaultsecret'; // Certifique-se de usar uma variável de ambiente para a chave secreta
+    const token = jwt.sign(
+      {
+        id: usuario.id,
+        email: usuario.email,
+        cargo: usuario.cargo,
+      },
+      secretKey,
+      {
+        expiresIn: '10h',
+      }
+    );
+    return token;
   }
 }

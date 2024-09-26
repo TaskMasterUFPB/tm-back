@@ -3,6 +3,7 @@ export interface CriarUsuario {
     email: string
     senha: string
     cargo: 'ADM' | 'FUNCIONARIO'
+    projetoId?: string | null;
 }
 
 export interface AtualizarUsuario {

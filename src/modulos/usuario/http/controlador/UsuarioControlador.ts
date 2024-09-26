@@ -11,6 +11,11 @@ interface EmailParams {
   email: string;
 }
 
+interface LoginBody {
+  email: string;
+  senha: string;
+}
+
 export class UsuarioController {
   private usuarioService: UsuarioService;
 
@@ -74,84 +79,24 @@ export class UsuarioController {
     }
   }
 
-  // Métodos de negócio para trabalhar com dados do usuário diretamente
-  async getNome(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
+  // Método de login
+  async login(req: FastifyRequest, res: FastifyReply): Promise<FastifyReply> {
     try {
-      const id = String(req.params.id);
-      const nome = await this.usuarioService.getNome(id);
-      return res.status(200).send({ nome });
-    } catch (error: any) {
-      return res.status(404).send({ error: error.message });
-    }
-  }
+      const { email, senha } = req.body as LoginBody;
 
-  async setNome(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
-    try {
-      const id = String(req.params.id);
-      const { nome } = req.body as { nome: string };
-      const usuarioAtualizado = await this.usuarioService.setNome(id, nome);
-      return res.status(200).send(usuarioAtualizado);
-    } catch (error: any) {
-      return res.status(400).send({ error: error.message });
-    }
-  }
+      // Verifica se o email e a senha estão corretos
+      const usuario = await this.usuarioService.autenticar(email, senha);
 
-  async getEmail(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
-    try {
-      const id = String(req.params.id);
-      const email = await this.usuarioService.getEmail(id);
-      return res.status(200).send({ email });
-    } catch (error: any) {
-      return res.status(404).send({ error: error.message });
-    }
-  }
-
-  async setEmail(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
-    try {
-      const id = String(req.params.id);
-      const { email } = req.body as { email: string };
-      const usuarioAtualizado = await this.usuarioService.setEmail(id, email);
-      return res.status(200).send(usuarioAtualizado);
-    } catch (error: any) {
-      return res.status(400).send({ error: error.message });
-    }
-  }
-
-  async setSenha(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
-    try {
-      const id = String(req.params.id);
-      const { senha } = req.body as { senha: string };
-      const usuarioAtualizado = await this.usuarioService.setSenha(id, senha);
-      return res.status(200).send(usuarioAtualizado);
-    } catch (error: any) {
-      return res.status(400).send({ error: error.message });
-    }
-  }
-
-  async getCargo(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
-    try {
-      const id = String(req.params.id);
-      const cargo = await this.usuarioService.getCargo(id);
-      return res.status(200).send({ cargo });
-    } catch (error: any) {
-      return res.status(404).send({ error: error.message });
-    }
-  }
-
-  async setCargo(req: FastifyRequest<{ Params: IdParams }>, res: FastifyReply): Promise<FastifyReply> {
-    try {
-      const id = String(req.params.id);
-      const { cargo } = req.body as { cargo: string };
-  
-      // Verificar se o cargo é válido
-      if (cargo !== 'ADM' && cargo !== 'FUNCIONARIO') {
-        return res.status(400).send({ error: 'Cargo inválido. Use "ADM" ou "FUNCIONARIO".' });
+      if (!usuario) {
+        return res.status(401).send({ error: 'Credenciais inválidas' });
       }
-  
-      const usuarioAtualizado = await this.usuarioService.setCargo(id, cargo as 'ADM' | 'FUNCIONARIO');
-      return res.status(200).send(usuarioAtualizado);
+
+      // Gerar token ou sessão (aqui poderia ser implementado um JWT, por exemplo)
+      const token = await this.usuarioService.gerarToken(usuario);
+
+      return res.status(200).send({ token });
     } catch (error: any) {
-      return res.status(400).send({ error: error.message });
+      return res.status(500).send({ error: error.message });
     }
-  }  
+  }
 }
