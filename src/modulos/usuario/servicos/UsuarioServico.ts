@@ -88,7 +88,6 @@ export class UsuarioService {
     if (!usuario) {
       throw new Error('Usuário não encontrado');
     }
-    console.log("senha: ",senha);
 
     // Verifica se a senha está correta
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
