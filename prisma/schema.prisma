@@ -29,8 +29,8 @@ model Projeto {
 }
 
 model Tarefa {
-  id                     String   @id @default(uuid())
-  titulo                 String   @db.VarChar(150)
+  id                     String    @id @default(uuid())
+  titulo                 String    @db.VarChar(150)
   descricao              String
   caso_teste             String
   prioridade             String
@@ -39,13 +39,13 @@ model Tarefa {
   usuario_autor_id       String
   usuario_responsavel_id String
   projeto_id             String?
-  dataCriacao            DateTime @default(now())
-  dataInicio             DateTime
-  dataFim                DateTime
-  deletado               Boolean  @default(false)
-  Autor                  Usuario  @relation(name: "AutorTarefa", fields: [usuario_autor_id], references: [id])
-  Responsavel            Usuario  @relation(name: "ResponsavelTarefa", fields: [usuario_responsavel_id], references: [id])
-  Projeto                Projeto? @relation(fields: [projeto_id], references: [id])
+  dataCriacao            DateTime  @default(now())
+  dataInicio             DateTime?
+  dataFim                DateTime?
+  deletado               Boolean   @default(false)
+  Autor                  Usuario   @relation(name: "AutorTarefa", fields: [usuario_autor_id], references: [id])
+  Responsavel            Usuario   @relation(name: "ResponsavelTarefa", fields: [usuario_responsavel_id], references: [id])
+  Projeto                Projeto?  @relation(fields: [projeto_id], references: [id])
 }
 
 model Usuario {
@@ -59,8 +59,9 @@ model Usuario {
   tarefasResponsavel Tarefa[]  @relation(name: "ResponsavelTarefa")
   projetoLider       Projeto[] @relation(name: "Criador")
   projetoResponsavel Projeto[] @relation(name: "Lider")
-  Projeto            Projeto?  @relation(fields: [projetoId], references: [id])
-  projetoId          String?
+
+  Projeto   Projeto? @relation(fields: [projetoId], references: [id])
+  projetoId String?
 }
 
 enum Cargo {

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Tarefa" ALTER COLUMN "dataInicio" DROP NOT NULL,
+ALTER COLUMN "dataFim" DROP NOT NULL;

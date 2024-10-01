@@ -7,13 +7,16 @@ export class ProjetoServico {
     }
 
     async criar(data: CriarProjeto) {
-        const { nome, descricao, id_criador, id_lider, url, dataInicio } = data;
+        const { nome, descricao, id_criador, id_lider, url, dataInicio, participantes_id } = data;
         return await this.projetoRepositorio.criar({
             nome,
             descricao,
             url,
             dataInicio: dataInicio ? new Date(dataInicio) : undefined, // optional start date
             deletado: false,
+            Participantes: {
+                connect: participantes_id.map(id => ({ id })),
+            },
             Criado: {
                 connect: { id: id_criador },
             },
