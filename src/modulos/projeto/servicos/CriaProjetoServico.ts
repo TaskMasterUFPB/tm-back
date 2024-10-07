@@ -41,4 +41,8 @@ export class ProjetoServico {
     async buscarTodos(id_criador: string) {
         return await this.projetoRepositorio.buscarTodos(id_criador);
     }
+
+    async buscarTodosDeParticipante(id_participante: string) {
+        return await this.projetoRepositorio.buscarTodosProjetosDeParticipante(id_participante);
+    }
 } 
