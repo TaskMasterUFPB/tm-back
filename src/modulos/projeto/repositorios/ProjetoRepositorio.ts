@@ -20,10 +20,24 @@ export class ProjetoRepositorio implements IProjetoRepositorio {
         })
     }
 
-    async buscarTodos(id_criador: string) {
+    async buscarTodos(id: string) {
         return await prisma.projeto.findMany({
             where: {
-                id_criador
+                id_criador: id
+            }, include: {
+                Participantes: true
+            }
+        })
+    }
+
+    async buscarTodosProjetosDeParticipante(participante_id: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                Participantes: {
+                    some: {
+                        id: participante_id
+                    }
+                }
             }
         })
     }
@@ -33,7 +47,7 @@ export class ProjetoRepositorio implements IProjetoRepositorio {
             where: {
                 id
             },
-            data
+            data,
         })
     }
 
