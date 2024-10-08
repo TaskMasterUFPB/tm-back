@@ -14,18 +14,20 @@ datasource db {
 }
 
 model Projeto {
-  id            String    @id @default(uuid())
-  nome          String    @db.VarChar(150)
-  descricao     String
-  id_criador    String
-  id_lider      String
-  url           String
-  dataInicio    DateTime  @default(now())
-  deletado      Boolean   @default(false)
-  Tarefas       Tarefa[]
-  Participantes Usuario[]
-  Criado        Usuario   @relation(name: "Criador", fields: [id_criador], references: [id])
-  Lider         Usuario   @relation(name: "Lider", fields: [id_lider], references: [id])
+  id                 String    @id @default(uuid())
+  nome               String    @db.VarChar(150)
+  descricao          String
+  id_criador         String
+  id_lider           String
+  email_lider        String?
+  emailParticipantes String[]
+  url                String
+  dataInicio         DateTime  @default(now())
+  deletado           Boolean   @default(false)
+  Tarefas            Tarefa[]
+  Participantes      Usuario[]
+  Criado             Usuario   @relation(name: "Criador", fields: [id_criador], references: [id])
+  Lider              Usuario   @relation(name: "Lider", fields: [id_lider], references: [id])
 }
 
 model Tarefa {

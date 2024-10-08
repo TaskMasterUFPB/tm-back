@@ -8,19 +8,31 @@ export async function CriarProjetoControlador(request: FastifyRequest, reply: Fa
         nome: z.string(),
         descricao: z.string(),
         id_criador: z.string(),
-        id_lider: z.string(),
         url: z.string(),
         dataInicio: z.date().optional(),
-        participantes_id: z.array(z.string())
+        emailParticipantes: z.array(z.string()),
+        email_lider: z.string()
     })
 
-    const dadosProjeto: CriarProjeto = ValidacaoValoresParaCriarProjeto.parse(request.body)
+    let dadosProjeto: CriarProjeto;
 
     try {
-        const projeto = fabricaProjeto()
-        await projeto.criar(dadosProjeto)
-
+        dadosProjeto = ValidacaoValoresParaCriarProjeto.parse(request.body);
     } catch (err) {
-        return reply.status(500).send({ message: 'Erro interno' })
+        const validationError = err as z.ZodError;
+        return reply.status(400).send({ message: 'Erro de validação dos dados', detalhes: validationError.errors });
+    }
+
+    try {
+        const projeto = fabricaProjeto();
+        await projeto.criar(dadosProjeto);
+        return reply.status(201).send({ message: 'Projeto criado com sucesso' });
+    } catch (err) {
+        if (err instanceof Error) {
+            return reply.status(400).send({ message: 'Erro específico do negócio', detalhes: err.message });
+        }
+
+        console.error('Erro inesperado ao criar o projeto:', err);
+        return reply.status(500).send({ message: 'Erro interno ao criar o projeto' });
     }
 }

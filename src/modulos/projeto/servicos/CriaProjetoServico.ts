@@ -1,27 +1,36 @@
+import { IUsuarioRepositorio } from "../../usuario/repositorios/IUsuarioRepositorio";
 import { AtualiarProjeto, CriarProjeto } from "../dtos/ICriaProjeto";
 import { IProjetoRepositorio } from "../repositorios/IProjetoRepositorio";
 
 export class ProjetoServico {
-    constructor(private projetoRepositorio: IProjetoRepositorio) {
+    constructor(private projetoRepositorio: IProjetoRepositorio, private usuarioRepositorio: IUsuarioRepositorio) {
         this.projetoRepositorio = projetoRepositorio;
+        this.usuarioRepositorio = usuarioRepositorio;
     }
 
     async criar(data: CriarProjeto) {
-        const { nome, descricao, id_criador, id_lider, url, dataInicio, participantes_id } = data;
+        const { nome, descricao, id_criador, url, dataInicio, emailParticipantes, email_lider } = data;
+
+        if (!email_lider) {
+            throw new Error("Email do líder é obrigatório.");
+        }
+        const buscaUsuarioPorEmail = await this.usuarioRepositorio.buscarPorEmail(email_lider);
+
         return await this.projetoRepositorio.criar({
             nome,
             descricao,
             url,
             dataInicio: dataInicio ? new Date(dataInicio) : undefined, // optional start date
             deletado: false,
+            email_lider,
             Participantes: {
-                connect: participantes_id.map(id => ({ id })),
+                connect: { id: buscaUsuarioPorEmail?.id },
             },
             Criado: {
                 connect: { id: id_criador },
             },
             Lider: {
-                connect: { id: id_lider },
+                connect: { id: buscaUsuarioPorEmail?.id },
             }
         });
     }
