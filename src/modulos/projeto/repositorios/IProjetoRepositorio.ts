@@ -7,4 +7,6 @@ export interface IProjetoRepositorio {
     atualizar(id: string, data: Prisma.ProjetoUpdateInput): Promise<Projeto | null>
     deletar(id: string): Promise<Projeto | null>
     buscarTodosProjetosDeParticipante(participante_id: string): Promise<Projeto[]>
+    buscarOndeLidero(lider_id: string): Promise<Projeto[]>
+    buscarOndeCriei(criador_id: string): Promise<Projeto[]>
 }

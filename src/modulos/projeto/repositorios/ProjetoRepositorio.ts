@@ -37,10 +37,28 @@ export class ProjetoRepositorio implements IProjetoRepositorio {
                     some: {
                         id: participante_id
                     }
-                }
+                },
             }
         })
     }
+
+    async buscarOndeLidero(lider_id: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                id_lider: lider_id
+            }
+        })
+    }
+
+    async buscarOndeCriei(criador_id: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                id_criador: criador_id
+            }
+        })
+    }
+
+
 
     async atualizar(id: string, data: Prisma.ProjetoUpdateInput) {
         return await prisma.projeto.update({

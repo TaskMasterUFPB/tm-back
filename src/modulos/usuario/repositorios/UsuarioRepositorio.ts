@@ -4,7 +4,7 @@ import { IUsuarioRepositorio } from './IUsuarioRepositorio';
 import { prisma } from "../../../lib/prisma";
 
 export class UsuarioRepositorio implements IUsuarioRepositorio {
-  
+
   async criar(data: Omit<Usuario, 'id' | 'deletado'>): Promise<Usuario> {
     const novoUsuario = await prisma.usuario.create({
       data: {
@@ -20,7 +20,7 @@ export class UsuarioRepositorio implements IUsuarioRepositorio {
       where: { id },
       data,
     }).catch(() => null);
-    
+
     return usuarioAtualizado;
   }
 
@@ -38,6 +38,16 @@ export class UsuarioRepositorio implements IUsuarioRepositorio {
     const usuario = await prisma.usuario.findFirst({
       where: {
         email: email,
+        deletado: false,
+      },
+    });
+    return usuario;
+  }
+
+  async buscarPorEmails(emails: string[]): Promise<Usuario[] | []> {
+    const usuario = await prisma.usuario.findMany({
+      where: {
+        email: { in: emails },
         deletado: false,
       },
     });
