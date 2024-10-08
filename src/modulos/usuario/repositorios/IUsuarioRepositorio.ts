@@ -5,5 +5,6 @@ export interface IUsuarioRepositorio {
   atualizar(id: string, data: Partial<Usuario>): Promise<Usuario | null>;
   buscarPorId(id: string): Promise<Usuario | null>;
   buscarPorEmail(email: string): Promise<Usuario | null>;
+  buscarPorEmails(emails: string[]): Promise<Usuario[] | []>;
   deletar(id: string): Promise<Usuario | null>;
 }

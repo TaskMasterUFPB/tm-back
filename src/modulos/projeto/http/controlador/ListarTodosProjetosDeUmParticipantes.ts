@@ -5,7 +5,8 @@ export async function LisarProjetosDeUmParticipanteControlador(request: FastifyR
     const { id } = request.params
     try {
         const projeto = fabricaProjeto()
-        return await projeto.buscarTodosDeParticipante(id)
+        console.log(projeto)
+        return await projeto.listarEnvolvidosNoProjeto(id)
 
     } catch (err) {
         return reply.status(500).send({ message: 'Erro interno' })

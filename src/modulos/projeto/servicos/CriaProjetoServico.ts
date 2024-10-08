@@ -16,6 +16,8 @@ export class ProjetoServico {
         }
         const buscaUsuarioPorEmail = await this.usuarioRepositorio.buscarPorEmail(email_lider);
 
+        const participantes = emailParticipantes ? await this.usuarioRepositorio.buscarPorEmails(emailParticipantes) : [];
+
         return await this.projetoRepositorio.criar({
             nome,
             descricao,
@@ -24,7 +26,7 @@ export class ProjetoServico {
             deletado: false,
             email_lider,
             Participantes: {
-                connect: { id: buscaUsuarioPorEmail?.id },
+                connect: participantes.map(participante => ({ id: participante.id })),
             },
             Criado: {
                 connect: { id: id_criador },
@@ -60,10 +62,9 @@ export class ProjetoServico {
         const lider = await this.projetoRepositorio.buscarOndeLidero(id_usuario)
         const criador = await this.projetoRepositorio.buscarOndeCriei(id_usuario)
 
-        const projetos = [...particpantes, ...lider, ...criador]
 
         return {
-            projetos
+            particpantes, lider, criador
         }
     }
 } 
