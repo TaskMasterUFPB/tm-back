@@ -54,4 +54,16 @@ export class ProjetoServico {
     async buscarTodosDeParticipante(id_participante: string) {
         return await this.projetoRepositorio.buscarTodosProjetosDeParticipante(id_participante);
     }
+
+    async listarEnvolvidosNoProjeto(id_usuario: string) {
+        const particpantes = await this.projetoRepositorio.buscarTodosProjetosDeParticipante(id_usuario);
+        const lider = await this.projetoRepositorio.buscarOndeLidero(id_usuario)
+        const criador = await this.projetoRepositorio.buscarOndeCriei(id_usuario)
+
+        const projetos = [...particpantes, ...lider, ...criador]
+
+        return {
+            projetos
+        }
+    }
 } 
