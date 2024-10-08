@@ -2,10 +2,12 @@ export interface CriarProjeto {
     nome: string
     descricao: string
     id_criador: string
-    id_lider: string
+    id_lider?: string
     url: string
     dataInicio?: Date
-    participantes_id: string[]
+    participantes_id?: string[]
+    email_lider?: string
+    emailParticipantes?: string[]
 }
 
 export interface AtualiarProjeto {

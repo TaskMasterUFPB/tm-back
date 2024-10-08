@@ -20,20 +20,52 @@ export class ProjetoRepositorio implements IProjetoRepositorio {
         })
     }
 
-    async buscarTodos(id_criador: string) {
+    async buscarTodos(id: string) {
         return await prisma.projeto.findMany({
             where: {
-                id_criador
+                id_criador: id
+            }, include: {
+                Participantes: true
             }
         })
     }
+
+    async buscarTodosProjetosDeParticipante(participante_id: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                Participantes: {
+                    some: {
+                        id: participante_id
+                    }
+                },
+            }
+        })
+    }
+
+    async buscarOndeLidero(lider_id: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                id_lider: lider_id
+            }
+        })
+    }
+
+    async buscarOndeCriei(criador_id: string) {
+        return await prisma.projeto.findMany({
+            where: {
+                id_criador: criador_id
+            }
+        })
+    }
+
+
 
     async atualizar(id: string, data: Prisma.ProjetoUpdateInput) {
         return await prisma.projeto.update({
             where: {
                 id
             },
-            data
+            data,
         })
     }
 
