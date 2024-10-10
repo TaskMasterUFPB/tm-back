@@ -25,6 +25,7 @@ model Projeto {
   dataInicio         DateTime  @default(now())
   deletado           Boolean   @default(false)
   Tarefas            Tarefa[]
+  Colunas            Coluna[]
   Criado             Usuario   @relation(name: "Criador", fields: [id_criador], references: [id])
   Lider              Usuario   @relation(name: "Lider", fields: [id_lider], references: [id])
   Participantes      Usuario[] @relation(name: "Participantes")
@@ -48,6 +49,17 @@ model Tarefa {
   Autor                  Usuario   @relation(name: "AutorTarefa", fields: [usuario_autor_id], references: [id])
   Responsavel            Usuario   @relation(name: "ResponsavelTarefa", fields: [usuario_responsavel_id], references: [id])
   Projeto                Projeto?  @relation(fields: [projeto_id], references: [id])
+  coluna_id              String?   // Relacionamento com coluna
+  Coluna                 Coluna?   @relation(fields: [coluna_id], references: [id])
+}
+
+model Coluna {
+  id                     String    @id @default(uuid())
+  titulo                 String    @db.VarChar(150)
+  posicao                Int
+  projeto_id             String
+  Projeto                Projeto   @relation(fields: [projeto_id], references: [id])
+  Tarefas                Tarefa[]
 }
 
 model Usuario {
