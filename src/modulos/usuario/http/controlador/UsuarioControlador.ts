@@ -27,9 +27,11 @@ export class UsuarioController {
   async criar(req: FastifyRequest, res: FastifyReply): Promise<FastifyReply> {
     try {
       const data: CriarUsuario = req.body as CriarUsuario;
+      console.log('Data recebida no método criar:', data);
       const novoUsuario = await this.usuarioService.criar(data);
       return res.status(201).send(novoUsuario);
     } catch (error: any) {
+      console.log('Erro no método criar:', error.message);
       return res.status(400).send({ error: error.message });
     }
   }
