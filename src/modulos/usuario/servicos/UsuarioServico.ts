@@ -12,7 +12,7 @@ export class UsuarioService {
   }
 
   // Criar um novo usuário
-  async criar(data: CriarUsuario) {
+  async criar(data: CriarUsuario): Promise<Usuario> {
     const usuarioExistente = await this.usuarioRepo.buscarPorEmail(data.email);
   
     if (usuarioExistente) {
